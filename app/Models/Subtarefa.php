@@ -9,7 +9,8 @@ class Subtarefa extends Model
 {
     use HasFactory;
 
-    protected $table = 'Subtarefa';
+    public $timestamps = false;
+    protected $table = 'subtarefa';
 
     protected $fillable = ['titulo', 'descricao', 'status', 'tarefa_pai_id', 'criado_em', 'concluido_em'];
 

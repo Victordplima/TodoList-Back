@@ -43,8 +43,6 @@ class TarefaController extends Controller
 
 
 
-
-    // Método para listar todas as tarefas
     public function index()
     {
         $tarefas = Tarefa::with('subtarefas', 'categorias')->get();
@@ -55,7 +53,9 @@ class TarefaController extends Controller
         ], 200);
     }
 
-    // Método para atualizar uma tarefa existente
+
+
+
     public function update(Request $request, $id)
     {
         // Validação dos campos

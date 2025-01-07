@@ -9,7 +9,7 @@ class Tarefa extends Model
 {
     use HasFactory;
 
-    protected $table = 'Tarefa';
+    protected $table = "tarefa";
 
     protected $fillable = ['titulo', 'descricao', 'status', 'criado_em', 'concluido_em'];
 
@@ -22,6 +22,6 @@ class Tarefa extends Model
 
     public function categorias()
     {
-        return $this->belongsToMany(Categoria::class, 'TarefaCategoria', 'tarefa_id', 'categoria_id');
+        return $this->belongsToMany(Categoria::class, 'tarefa_categoria', 'tarefa_id', 'categoria_id');
     }
 }
