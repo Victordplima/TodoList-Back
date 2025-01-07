@@ -25,13 +25,13 @@ class CategoriaController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
-            'cor_em_hexadecimal' => 'nullable|string|size:7', // Validar formato de cor hexadecimal
+            'cor_em_hexadecimal' => 'nullable|string|size:7',
         ]);
 
         try {
             $categoria = Categoria::create([
                 'nome' => $request->nome,
-                'cor_em_hexadecimal' => $request->cor_em_hexadecimal, // Adicionei o campo
+                'cor_em_hexadecimal' => $request->cor_em_hexadecimal,
             ]);
 
             return response()->json([
@@ -89,13 +89,11 @@ class CategoriaController extends Controller
     public function assignToTarefa(Request $request, $tarefaId)
     {
         try {
-            // Validação dos dados de entrada
             $request->validate([
-                'categorias' => 'required|array', // Verifica se o parâmetro categorias é um array
-                'categorias.*' => 'exists:categoria,id', // Verifica se cada id de categoria existe na tabela 'categorias'
+                'categorias' => 'required|array',
+                'categorias.*' => 'exists:categoria,id',
             ]);
 
-            // Busca a tarefa pelo ID
             $tarefa = Tarefa::find($tarefaId);
 
             if (!$tarefa) {
@@ -105,7 +103,6 @@ class CategoriaController extends Controller
                 ], 404);
             }
 
-            // Sincroniza as categorias com a tarefa
             $tarefa->categorias()->sync($request->categorias);
 
             return response()->json([

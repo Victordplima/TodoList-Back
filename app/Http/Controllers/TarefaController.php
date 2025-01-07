@@ -12,20 +12,33 @@ use Exception;
 
 class TarefaController extends Controller
 {
-    // Método para criar uma nova tarefa
     public function store(Request $request)
     {
         $request->validate([
             'titulo' => 'required|string|max:255',
             'descricao' => 'nullable|string|max:255',
+            'categorias' => 'nullable|array|max:3',
+            'categorias.*' => 'exists:categoria,id',
         ]);
 
         try {
-            // Criar a tarefa
             $tarefa = Tarefa::create([
                 'titulo' => $request->titulo,
                 'descricao' => $request->descricao,
             ]);
+
+            if ($request->has('categorias') && count($request->categorias) > 0) {
+                $categoriasExistentes = Categoria::whereIn('id', $request->categorias)->pluck('id')->toArray();
+
+                if (count($categoriasExistentes) !== count($request->categorias)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Algumas categorias não existem.',
+                    ], 400);
+                }
+
+                $tarefa->categorias()->sync($categoriasExistentes);
+            }
 
             return response()->json([
                 'status' => true,
@@ -37,9 +50,14 @@ class TarefaController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Erro ao criar a tarefa: ' . $e->getMessage(),
-            ], 400);
+            ], 500);
         }
     }
+
+
+
+
+
 
 
 
@@ -58,14 +76,12 @@ class TarefaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validação dos campos
         $request->validate([
             'titulo' => 'nullable|string|max:255',
             'descricao' => 'nullable|string|max:255',
             'status' => 'nullable|string|in:pendente,em andamento,concluída',
         ]);
 
-        // Buscar a tarefa pelo ID
         $tarefa = Tarefa::find($id);
 
         if (!$tarefa) {
@@ -75,18 +91,21 @@ class TarefaController extends Controller
             ], 404);
         }
 
-        // Atualizar os campos apenas se forem fornecidos
-        $tarefa->update(array_filter($request->only(['titulo', 'descricao', 'status'])));
+        $data = array_filter($request->only(['titulo', 'descricao', 'status']));
 
-        // Atualizar subtarefas associadas (se fornecidas)
+        if (isset($data['status']) && $data['status'] === 'concluída') {
+            $data['concluido_em'] = now();
+        }
+
+        $tarefa->update($data);
+
         if ($request->subtarefas) {
-            $tarefa->subtarefas()->delete(); // Deletar subtarefas existentes
+            $tarefa->subtarefas()->delete();
             foreach ($request->subtarefas as $subtarefa) {
                 $tarefa->subtarefas()->create($subtarefa);
             }
         }
 
-        // Atualizar categorias associadas (se fornecidas)
         if ($request->categorias) {
             $tarefa->categorias()->sync($request->categorias);
         }
@@ -99,7 +118,7 @@ class TarefaController extends Controller
     }
 
 
-    // Método para deletar uma tarefa
+
     public function destroy($id)
     {
         $tarefa = Tarefa::find($id);
