@@ -5,6 +5,7 @@
     <a href="#sobre">Sobre</a> •
     <a href="#documentacao">Documentação</a> •
     <a href="#tecnologias">Tecnologias</a> •
+    <a href="#bd">Modelo Entidade-Relacionamento</a> •
     <a href="#instalacao">Instalação</a> •
     <a href="#autor">Autor</a>
 </p>
@@ -27,7 +28,7 @@ Um sistema de gerenciamento de tarefas com suporte a subtarefas e categorias. De
 + Testes de API e Documentação: Postman
 
 
-<h2 id="tecnologias">🎲 Modelo Entidade-Relacionamento</h2>
+<h2 id="bd">🎲 Modelo Entidade-Relacionamento</h2>
 <p align="center">
   <img src="Modelo Entidade-Relacionamento.png" alt="Tela de perfil">
 </p>
