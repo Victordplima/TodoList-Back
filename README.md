@@ -26,6 +26,15 @@ Um sistema de gerenciamento de tarefas com suporte a subtarefas e categorias. De
 + Gerenciador de Dependências: Composer
 + Testes de API e Documentação: Postman
 
+
+<h2 id="tecnologias">🎲 Modelo Entidade-Relacionamento</h2>
+<p align="center">
+  <img src="Modelo Entidade-Relacionamento.png" alt="Tela de perfil">
+</p>
+
+[Query de criação do Banco de Dados](https://drive.google.com/file/d/174kaqyPL4CED_z4x92O1zrp7K4nC3IMw/view?usp=sharing)
+
+
 <h2 id="instalacao">🚀 Como executar o projeto</h2>
 Siga os passos abaixo para executar o projeto em seu ambiente local:
 
