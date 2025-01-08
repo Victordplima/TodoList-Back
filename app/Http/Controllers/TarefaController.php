@@ -61,15 +61,32 @@ class TarefaController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $tarefas = Tarefa::with('subtarefas', 'categorias')->get();
+        $categoriaId = $request->query('categoria_id');
+        $ordem = $request->query('ordem', 'asc');
+        $ordenarPor = $request->query('ordenar_por', 'titulo');
+
+        $query = Tarefa::with('subtarefas', 'categorias');
+
+        if ($categoriaId) {
+            $query->whereHas('categorias', function ($q) use ($categoriaId) {
+                $q->where('categoria.id', $categoriaId);
+            });
+        }
+
+        if (in_array($ordenarPor, ['titulo', 'criado_em']) && in_array($ordem, ['asc', 'desc'])) {
+            $query->orderBy($ordenarPor, $ordem);
+        }
+
+        $tarefas = $query->get();
 
         return response()->json([
             'status' => true,
             'tarefas' => $tarefas,
         ], 200);
     }
+
 
 
 
